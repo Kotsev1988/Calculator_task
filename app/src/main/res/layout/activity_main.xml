@@ -39,14 +39,6 @@
         app:layout_constraintTop_toBottomOf="@+id/calcDispley">
 
         <Button
-            android:id="@+id/ac"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_columnWeight="1"
-            android:text="@string/key_AC"
-            android:backgroundTint="#44472A" />
-
-        <Button
             android:id="@+id/one"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -178,6 +170,15 @@
             android:layout_columnWeight="1"
             android:backgroundTint="#44472A"
             android:text="@string/key_devide" />
+
+        <Button
+            android:id="@+id/ac"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/key_AC"
+            android:layout_columnSpan="4"
+            android:backgroundTint="#44472A" />
 
     </GridLayout>
 

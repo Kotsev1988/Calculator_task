@@ -141,6 +141,13 @@
             android:layout_columnWeight="1"
             android:backgroundTint="#44472A"
             android:text="@string/key_multiplication" />
+        <Button
+            android:id="@+id/dote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:backgroundTint="#44472A"
+            android:text="@string/key_dot" />
 
         <Button
             android:id="@+id/zero"
@@ -151,14 +158,15 @@
             android:text="@string/key_0"
 
             />
-
         <Button
-            android:id="@+id/dote"
+            android:id="@+id/equals"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:backgroundTint="#44472A"
-            android:text="@string/key_dot" />
+            android:text="@string/key_equqls" />
+
+
 
         <Button
             android:id="@+id/divide"

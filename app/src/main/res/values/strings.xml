@@ -18,4 +18,9 @@
     <string name="key_default_symbol">0</string>
     <string name="key_AC">AC</string>
     <string name="key_equqls">=</string>
+    <string name="CodeStyle">Code Style</string>
+    <string name="AppThemeLight">AppTheme Light</string>
+    <string name="AppThemeDark">AppTheme Dark</string>
+
+
 </resources>

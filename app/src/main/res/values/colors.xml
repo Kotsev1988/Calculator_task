@@ -7,4 +7,14 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="calculateorButton">#44472A</color>
+    <color name="displayColor">#370B0A0A</color>
+    <color name="redMyTheme">#F80C0C</color>
+    <color name="greenMyTheme">#85BA51</color>
+    <color name="darkpinkMyTheme">#b0003a</color>
+    <color name="textPrimaryForLightTheme">#E7FAE8</color>
+    <color name="backgroundForLight">#F1F8EF</color>
+    <color name="colorPrimaryMyDark">#837F7F</color>
+    <color name="colorPrimaryDarkMyDark">#655F5F</color>
+
 </resources>

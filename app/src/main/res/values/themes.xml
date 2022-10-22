@@ -12,5 +12,45 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
+
+    </style>
+
+
+    <style name="MyStyle" parent="Theme.Calculator_task">
+        <item name="android:layout_margin">@dimen/marginTextView</item>
+        <item name="android:background">@color/displayColor</item>
+        <item name="android:gravity">end|bottom</item>
+        <item name="android:text">@string/key_default_symbol</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/text_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="MyStyleButton" parent="Theme.Calculator_task">
+        <item name="android:backgroundTint">@color/calculateorButton</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/text_size_button</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_columnWeight">@integer/columnWeight</item>
+    </style>
+
+
+    <style name="AppThemeLight" parent="Theme.MaterialComponents.Light">
+
+        <item name="colorPrimary">@color/greenMyTheme</item>
+        <item name="colorPrimaryDark">@color/redMyTheme</item>
+        <item name="colorAccent">@color/darkpinkMyTheme</item>
+        <item name="android:windowBackground">@color/backgroundForLight</item>
+        <item name="android:textColorPrimary">@color/textPrimaryForLightTheme</item>
+
+    </style>
+
+    <style name="AppThemeDark" parent="Theme.MaterialComponents">
+        <item name="colorPrimary">@color/colorPrimaryMyDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkMyDark</item>
+        <item name="colorAccent">@color/darkpinkMyTheme</item>
+        <item name="backgroundTint">#F9FAF7</item>
+
     </style>
 </resources>

@@ -3,14 +3,17 @@ package com.example.calculator_task.ui;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.calculator_task.R;
 import com.example.calculator_task.models.Operations;
 import com.example.calculator_task.models.Operator;
 import com.example.calculator_task.models.makeOperation;
+import com.google.android.material.radiobutton.MaterialRadioButton;
 
 import java.text.DecimalFormat;
 import java.text.ParsePosition;
@@ -24,16 +27,27 @@ public class MainActivity extends AppCompatActivity implements CalcView {
     String str;
     saveInstCalculator saveInstCalculator;
 
+
+    private static final int CodeStyle = 0;
+    private static final int AppThemeLight = 1;
+    private static final int AppThemeDark = 2;
+
+    private static final String StyleSharedPref = "STYLE";
+    private static final String appTheme = "APP_THEME";
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setTheme(getAppTheme(R.style.AppThemeDark));
         setContentView(R.layout.activity_main);
+        initThemeChooser();
+
         resultText = (TextView) findViewById(R.id.calcDispley);
         presenter = new CalcPresenter( this, new makeOperation());
-
-
         if (savedInstanceState!=null){
-            System.out.println("bundleSave "+savedInstanceState.getString(KEY));
             saveInstCalculator = savedInstanceState.getParcelable(KEY);
 
             str = saveInstCalculator.getValue();
@@ -112,6 +126,67 @@ public class MainActivity extends AppCompatActivity implements CalcView {
                 presenter.onEquals();
             }
         });
+
+    }
+
+    private void initThemeChooser() {
+
+        initRadioButton(findViewById(R.id.MyStyle), CodeStyle);
+        initRadioButton(findViewById(R.id.LightStyle), AppThemeLight);
+        initRadioButton(findViewById(R.id.DarkStyle), AppThemeDark);
+        RadioGroup radioGroup = findViewById(R.id.radioGroup);
+        ((MaterialRadioButton)radioGroup.getChildAt(getCodeStyle(AppThemeLight))).setChecked(true);
+
+    }
+
+    private void initRadioButton(View viewById, int style) {
+
+        viewById.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("Style RadioButton "+style);
+                setAppTheme(style);
+                recreate();
+            }
+        });
+    }
+
+    private int getAppTheme(int myStyle) {
+        System.out.println("getAppTheme "+codeStyleToStyleId(myStyle) + "style "+myStyle);
+        return codeStyleToStyleId(getCodeStyle(myStyle));
+    }
+
+    private int getCodeStyle(int myStyle) {
+        SharedPreferences sharedPreferences = getSharedPreferences(StyleSharedPref, MODE_PRIVATE);
+        System.out.println("getCodeStyle "+sharedPreferences.getInt(appTheme, myStyle));
+        return  sharedPreferences.getInt(appTheme, myStyle);
+    }
+
+    private void setAppTheme(int style){
+        SharedPreferences sharedPreferences = getSharedPreferences(StyleSharedPref, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        System.out.println("setAppTheme "+style);
+        editor.putInt(appTheme, style);
+        editor.apply();
+    }
+
+
+
+
+
+    private int codeStyleToStyleId(int myStyle) {
+
+        switch (myStyle){
+            case CodeStyle:
+                return R.style.Theme_Calculator_task;
+            case AppThemeLight:
+                return R.style.AppThemeLight;
+            case AppThemeDark:
+                return R.style.AppThemeDark;
+
+            default:
+                return R.style.Theme_Calculator_task;
+        }
 
     }
 

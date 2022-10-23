@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="columnWeight">1</integer>
+    <integer name="columnCount">4</integer>
+    <integer name="columnRow">4</integer>
+</resources>

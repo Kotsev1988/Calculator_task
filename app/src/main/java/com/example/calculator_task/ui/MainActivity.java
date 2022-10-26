@@ -1,17 +1,26 @@
 package com.example.calculator_task.ui;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.calculator_task.R;
 import com.example.calculator_task.models.Operations;
 import com.example.calculator_task.models.Operator;
+import com.example.calculator_task.models.Theme;
+import com.example.calculator_task.models.ThemeRepository;
+import com.example.calculator_task.models.ThemeRepositoryImpl;
 import com.example.calculator_task.models.makeOperation;
 import com.google.android.material.radiobutton.MaterialRadioButton;
 
@@ -26,33 +35,30 @@ public class MainActivity extends AppCompatActivity implements CalcView {
     private static final String KEY="KEY_SAVE";
     String str;
     saveInstCalculator saveInstCalculator;
-
-
-    private static final int CodeStyle = 0;
-    private static final int AppThemeLight = 1;
-    private static final int AppThemeDark = 2;
-
-    private static final String StyleSharedPref = "STYLE";
-    private static final String appTheme = "APP_THEME";
-
-
+    private ThemeRepository themeRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setTheme(getAppTheme(R.style.AppThemeDark));
-        setContentView(R.layout.activity_main);
-        initThemeChooser();
+        themeRepository = ThemeRepositoryImpl.getInstance(this);
+        setTheme(themeRepository.getSavedTheme().getThemeRes());
 
+        setContentView(R.layout.activity_main);
         resultText = (TextView) findViewById(R.id.calcDispley);
+
+        if (getIntent().hasExtra("message")){
+            System.out.println("Get IntentExtra "+getIntent().getStringExtra("message"));
+        }
+
         presenter = new CalcPresenter( this, new makeOperation());
         if (savedInstanceState!=null){
             saveInstCalculator = savedInstanceState.getParcelable(KEY);
 
             str = saveInstCalculator.getValue();
+            System.out.println("getOperator "+ saveInstCalculator.getOperator());
             resultText.setText(str);
-            presenter.savedInst(str);
+            presenter.savedInst(str, saveInstCalculator.getOperator());
         }else {
             saveInstCalculator = new saveInstCalculator();
         }
@@ -127,66 +133,26 @@ public class MainActivity extends AppCompatActivity implements CalcView {
             }
         });
 
-    }
 
-    private void initThemeChooser() {
 
-        initRadioButton(findViewById(R.id.MyStyle), CodeStyle);
-        initRadioButton(findViewById(R.id.LightStyle), AppThemeLight);
-        initRadioButton(findViewById(R.id.DarkStyle), AppThemeDark);
-        RadioGroup radioGroup = findViewById(R.id.radioGroup);
-        ((MaterialRadioButton)radioGroup.getChildAt(getCodeStyle(AppThemeLight))).setChecked(true);
-
-    }
-
-    private void initRadioButton(View viewById, int style) {
-
-        viewById.setOnClickListener(new View.OnClickListener() {
+       ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
-            public void onClick(View view) {
-                System.out.println("Style RadioButton "+style);
-                setAppTheme(style);
-                recreate();
+            public void onActivityResult(ActivityResult result) {
+              Theme theme = (Theme) result.getData().getSerializableExtra(SelectThemeActivity.EXTRA_THEME);
+              themeRepository.saveTheme(theme);
+              recreate();
             }
         });
-    }
 
-    private int getAppTheme(int myStyle) {
-        System.out.println("getAppTheme "+codeStyleToStyleId(myStyle) + "style "+myStyle);
-        return codeStyleToStyleId(getCodeStyle(myStyle));
-    }
+        findViewById(R.id.selectTheme).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SelectThemeActivity.class);
+                intent.putExtra(SelectThemeActivity.EXTRA_THEME, themeRepository.getSavedTheme());
+                launcher.launch(intent);
 
-    private int getCodeStyle(int myStyle) {
-        SharedPreferences sharedPreferences = getSharedPreferences(StyleSharedPref, MODE_PRIVATE);
-        System.out.println("getCodeStyle "+sharedPreferences.getInt(appTheme, myStyle));
-        return  sharedPreferences.getInt(appTheme, myStyle);
-    }
-
-    private void setAppTheme(int style){
-        SharedPreferences sharedPreferences = getSharedPreferences(StyleSharedPref, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        System.out.println("setAppTheme "+style);
-        editor.putInt(appTheme, style);
-        editor.apply();
-    }
-
-
-
-
-
-    private int codeStyleToStyleId(int myStyle) {
-
-        switch (myStyle){
-            case CodeStyle:
-                return R.style.Theme_Calculator_task;
-            case AppThemeLight:
-                return R.style.AppThemeLight;
-            case AppThemeDark:
-                return R.style.AppThemeDark;
-
-            default:
-                return R.style.Theme_Calculator_task;
-        }
+            }
+        });
 
     }
 
@@ -202,7 +168,13 @@ public class MainActivity extends AppCompatActivity implements CalcView {
 
 
         str = resultText.getText().toString();
-        saveInstCalculator.setValue(str);
+        if (presenter.getOperatorPress()!=null) {
+            saveInstCalculator.setValue(str, presenter.getOperatorPress().name());
+        }else {
+            saveInstCalculator.setValue(str, null);
+        }
+
+
         outState.putParcelable(KEY, saveInstCalculator);
     }
 }

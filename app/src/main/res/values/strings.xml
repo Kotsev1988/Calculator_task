@@ -21,6 +21,7 @@
     <string name="CodeStyle">Code Style</string>
     <string name="AppThemeLight">AppTheme Light</string>
     <string name="AppThemeDark">AppTheme Dark</string>
+    <string name="selectTheme">Select Theme</string>
 
 
 </resources>

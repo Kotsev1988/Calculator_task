@@ -21,7 +21,7 @@
         android:id="@+id/grid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="@dimen/gridMarginBottom"
         android:columnCount="@integer/columnCount"
         android:rowCount="@integer/columnRow"
         android:useDefaultMargins="true"
@@ -37,7 +37,6 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="@integer/columnWeight"
             android:text="@string/key_1"
-
             />
 
         <com.google.android.material.button.MaterialButton
@@ -156,39 +155,15 @@
 
     </GridLayout>
 
-    <RadioGroup
-        android:id="@+id/radioGroup"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/selectTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_margin="@dimen/text_size_button"
+        android:text="@string/selectTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/grid"
-        >
+        app:layout_constraintTop_toBottomOf="@+id/grid" />
 
-        <com.google.android.material.radiobutton.MaterialRadioButton
-            android:id="@+id/MyStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/CodeStyle"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
 
-        <com.google.android.material.radiobutton.MaterialRadioButton
-            android:id="@+id/LightStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/AppThemeLight"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/materialRadioButton" />
-
-        <com.google.android.material.radiobutton.MaterialRadioButton
-            android:id="@+id/DarkStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/AppThemeDark"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/materialRadioButton2" />
-
-    </RadioGroup>>
 </androidx.constraintlayout.widget.ConstraintLayout>

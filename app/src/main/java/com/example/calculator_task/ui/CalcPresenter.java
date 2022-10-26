@@ -81,10 +81,18 @@ public class CalcPresenter {
     }
 
 
-    public void savedInst(String integer) {
+    public void savedInst(String integer, String oper) {
         ParsePosition pp = new ParsePosition(0);
         argOne = formater.parse(integer, pp).doubleValue();
 
+        for (Operator operator: Operator.values()){
+            if (operator.name().equals(oper)){
+                operatorPress = operator;
+                argTwo = 0.0;
+            }
+        }
+        System.out.println("arg1 "+argOne + " , "+"arg2 "+argTwo);
+        System.out.println("operatorPress"+operatorPress);
     }
 
     public void onEquals() {
@@ -94,6 +102,9 @@ public class CalcPresenter {
             showFormatted(argOne);
             operatorPress = null;
         }
+    }
 
+    public Operator getOperatorPress() {
+        return operatorPress;
     }
 }

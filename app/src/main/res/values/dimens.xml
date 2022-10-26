@@ -4,5 +4,7 @@
     <dimen name="text_size">35sp</dimen>
     <dimen name="text_size_button">25sp</dimen>
     <dimen name="marginTextView">20dp</dimen>
+    <dimen name="marginRadioGroup">20dp</dimen>
+    <dimen name="gridMarginBottom">80dp</dimen>
 
 </resources>

@@ -14,10 +14,11 @@
         <!-- Customize your theme here. -->
 
 
+
     </style>
 
 
-    <style name="MyStyle" parent="Theme.Calculator_task">
+    <style name="MyStyle" >
         <item name="android:layout_margin">@dimen/marginTextView</item>
         <item name="android:background">@color/displayColor</item>
         <item name="android:gravity">end|bottom</item>
@@ -26,6 +27,8 @@
         <item name="android:textSize">@dimen/text_size</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+
 
     <style name="MyStyleButton" parent="Theme.Calculator_task">
         <item name="android:backgroundTint">@color/calculateorButton</item>

@@ -6,6 +6,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,26 +18,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.calculator_task.R;
-import com.example.calculator_task.models.Operations;
 import com.example.calculator_task.models.Operator;
 import com.example.calculator_task.models.Theme;
 import com.example.calculator_task.models.ThemeRepository;
 import com.example.calculator_task.models.ThemeRepositoryImpl;
-import com.example.calculator_task.models.makeOperation;
-import com.google.android.material.radiobutton.MaterialRadioButton;
 
-import java.text.DecimalFormat;
-import java.text.ParsePosition;
 import java.util.HashMap;
 
-public class MainActivity extends AppCompatActivity implements CalcView {
+public class MainActivity extends AppCompatActivity {
 
     private TextView resultText;
-    CalcPresenter presenter;
-    private static final String KEY="KEY_SAVE";
-    String str;
-    saveInstCalculator saveInstCalculator;
     private ThemeRepository themeRepository;
+
+    MainViewModel vm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,20 +42,10 @@ public class MainActivity extends AppCompatActivity implements CalcView {
         setContentView(R.layout.activity_main);
         resultText = (TextView) findViewById(R.id.calcDispley);
 
-        if (getIntent().hasExtra("message")){
-            System.out.println("Get IntentExtra "+getIntent().getStringExtra("message"));
-        }
+        vm = new ViewModelProvider(this, new ModelViewFactoryCalc()).get(MainViewModel.class);
 
-        presenter = new CalcPresenter( this, new makeOperation());
-        if (savedInstanceState!=null){
-            saveInstCalculator = savedInstanceState.getParcelable(KEY);
-
-            str = saveInstCalculator.getValue();
-            System.out.println("getOperator "+ saveInstCalculator.getOperator());
-            resultText.setText(str);
-            presenter.savedInst(str, saveInstCalculator.getOperator());
-        }else {
-            saveInstCalculator = new saveInstCalculator();
+        if (getIntent().hasExtra("message")) {
+            System.out.println("Get IntentExtra " + getIntent().getStringExtra("message"));
         }
 
         HashMap<Integer, Integer> symbols = new HashMap<>();
@@ -75,10 +60,20 @@ public class MainActivity extends AppCompatActivity implements CalcView {
         symbols.put(R.id.eight, 8);
         symbols.put(R.id.nine, 9);
 
+        vm.getShowData().observe(this, new Observer<Double>() {
+            @Override
+            public void onChanged(Double aDouble) {
+                resultText.setText(String.valueOf(aDouble.doubleValue()));
+            }
+        });
+
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.onDigitPressed(symbols.get(view.getId()));
+
+                vm.onDigitPressed(symbols.get(view.getId()));
+
+                //presenter.onDigitPressed(symbols.get(view.getId()));
             }
         };
 
@@ -102,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements CalcView {
         View.OnClickListener clickListenerOperation = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.onOperatorPressed(operationSymbols.get(view.getId()));
+                vm.onOperatorPressed(operationSymbols.get(view.getId()));
             }
         };
 
@@ -115,32 +110,31 @@ public class MainActivity extends AppCompatActivity implements CalcView {
         findViewById(R.id.dote).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.onDotPressed();
+                vm.onDotPressed();
             }
         });
 
         findViewById(R.id.ac).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.onACPressed();
+                vm.onACPressed();
             }
         });
 
         findViewById(R.id.equals).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.onEquals();
+                vm.onEquals();
             }
         });
 
 
-
-       ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
-              Theme theme = (Theme) result.getData().getSerializableExtra(SelectThemeActivity.EXTRA_THEME);
-              themeRepository.saveTheme(theme);
-              recreate();
+                Theme theme = (Theme) result.getData().getSerializableExtra(SelectThemeActivity.EXTRA_THEME);
+                themeRepository.saveTheme(theme);
+                recreate();
             }
         });
 
@@ -153,28 +147,5 @@ public class MainActivity extends AppCompatActivity implements CalcView {
 
             }
         });
-
-    }
-
-    @Override
-    public void showText(String s) {
-        System.out.println("text "+s);
-        resultText.setText(s);
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-
-        str = resultText.getText().toString();
-        if (presenter.getOperatorPress()!=null) {
-            saveInstCalculator.setValue(str, presenter.getOperatorPress().name());
-        }else {
-            saveInstCalculator.setValue(str, null);
-        }
-
-
-        outState.putParcelable(KEY, saveInstCalculator);
     }
 }
